@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -35,6 +36,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return responder()->error('bad request' , $validator->errors()->first())->respond(400);
+        }
+
         return responder()->success(Post::create($request->all()))->respond();
     }
 
@@ -73,6 +83,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return responder()->error('bad request' , $validator->errors()->first())->respond(400);
+        }
+
         $post->update($request->all());
         return responder()->success($post)->respond();
     }
