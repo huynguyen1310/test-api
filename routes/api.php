@@ -16,3 +16,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::resource('posts', 'PostController');
+
+
+Route::fallback(function(){
+    return responder()->error('Not Found', 'Not found')->respond(404);
+});
