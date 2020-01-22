@@ -18,9 +18,10 @@ use Illuminate\Http\Request;
 // });
 
 Route::post('login', 'UserController@login');
-// Route::post('register', 'API\UserController@register');
+// Route::post('register', 'UserController@register');
 
 Route::middleware('auth:api')->resource('posts', 'PostController');
+Route::middleware('auth:api')->resource('comments', 'CommentController');
 
 
 Route::fallback(function(){
