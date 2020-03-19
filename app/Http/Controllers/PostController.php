@@ -13,19 +13,21 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return responder()->success(Post::paginate(5))->respond();
-    }
+       $query = Post::query();
+       $query->when(request('user_id'), function ($query) {
+           return $query->where('user_id',request('user_id'));
+       })->when(request('trashed'), function($query) {
+           return $query->onlyTrashed();
+       })->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+       $query->when(request('per_page',5), function($query,$per_page) {
+           return $query->paginate($per_page);
+       });
+
+       return responder()->success($query)->respond();
+        
     }
 
     /**
@@ -61,17 +63,6 @@ class PostController extends Controller
         }else {
             return responder()->error()->respond();
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
     }
 
     /**

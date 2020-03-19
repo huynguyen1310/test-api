@@ -20,6 +20,7 @@ trait UserStampTrait
 
         static::deleting(function ($model) {
             $model->deleted_by = Auth::user()->name;
+            $model->save();
         });
     }
 }
